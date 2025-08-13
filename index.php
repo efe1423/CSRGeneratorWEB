@@ -187,15 +187,71 @@ setTimeout(() => { copyCsrBtn.style.color = ''; copyCsrBtn.textContent = '📄';
 <title>CSR Oluşturucu</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-@font-face { font-family: poppins; src: url('font/Poppins-Regular.ttf') format('truetype'); }
-body { background: #f0f0f0; font-family: poppins; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-form { background: white; padding: 20px 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); display: flex; flex-direction: column; max-width: 500px; width: 100%; box-sizing: border-box; }
-label { margin-top: 15px; font-weight: 600; }
-input, select { padding: 8px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; width: 100%; box-sizing: border-box; font-family: poppins; }
-button { margin-top: 20px; padding: 12px; font-size: 1rem; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-button:hover { background: #45a049; }
-h2 { text-align: center; margin-bottom: 20px; }
-.error-message { background: #fdecea; border: 1px solid #f5c2c0; color: #b71c1c; border-radius: 5px; padding: 10px 15px; margin-bottom: 15px; font-weight: 600; }
+@font-face { 
+    font-family: poppins;
+    src: url('font/Poppins-Regular.ttf') 
+    format('truetype'); 
+}
+body { 
+    background: #f0f0f0; 
+    font-family: poppins; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    margin: 0; 
+}
+form { 
+    background: white; 
+    padding: 20px 30px; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+    display: flex; 
+    flex-direction: column; 
+    max-width: 500px; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+label { 
+    margin-top: 15px; 
+    font-weight: 600; 
+}
+input, select { 
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    margin-top: 5px; 
+    width: 100%; 
+    box-sizing: border-box; 
+    font-family: poppins; 
+}
+button { 
+    margin-top: 20px; 
+    padding: 12px; 
+    font-size: 1rem; 
+    background: #4CAF50; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+button:hover { 
+    background: #45a049; 
+}
+h2 { 
+    text-align: center; 
+    margin-bottom: 20px; 
+}
+.error-message { 
+    background: #fdecea; 
+    border: 1px solid #f5c2c0; 
+    color: #b71c1c; 
+    border-radius: 5px; 
+    padding: 10px 15px; 
+    margin-bottom: 15px; 
+    font-weight: 600; 
+    }
 </style>
 </head>
 <body>
@@ -211,22 +267,37 @@ h2 { text-align: center; margin-bottom: 20px; }
 </div>
 <?php endif; ?>
 <label for="CN">Alan Adı</label>
-<input type="text" name="CN" id="CN" placeholder="ornek.com" required value="<?= htmlspecialchars($_POST['CN'] ?? '') ?>">
+<input type="text" name="CN" id="CN" placeholder="ornek.com" 
+required value="<?= htmlspecialchars($_POST['CN'] ?? '') ?>">
+
 <label for="OU">Organizasyon Birimi</label>
-<input type="text" name="OU" id="OU" placeholder="Ar-Ge" required value="<?= htmlspecialchars($_POST['OU'] ?? '') ?>">
+<input type="text" name="OU" id="OU" placeholder="Ar-Ge" 
+required value="<?= htmlspecialchars($_POST['OU'] ?? '') ?>">
+
 <label for="O">Organizasyon</label>
-<input type="text" name="O" id="O" placeholder="TÜBİTAK" required value="<?= htmlspecialchars($_POST['O'] ?? '') ?>">
+<input type="text" name="O" id="O" placeholder="TÜBİTAK" 
+required value="<?= htmlspecialchars($_POST['O'] ?? '') ?>">
+
 <label for="ST">Şehir</label>
 <input type="text" name="ST" id="ST" placeholder="Ankara" required value="<?= htmlspecialchars($_POST['ST'] ?? '') ?>">
+
 <label for="L">İlçe</label>
-<input type="text" name="L" id="L" placeholder="Çankaya" required value="<?= htmlspecialchars($_POST['L'] ?? '') ?>">
+<input type="text" name="L" id="L" placeholder="Çankaya" 
+required value="<?= htmlspecialchars($_POST['L'] ?? '') ?>">
+
 <label for="C">Ülke</label>
-<input type="text" name="C" id="C" placeholder="TR" required maxlength="2" pattern="[A-Za-z]{2}" title="Sadece 2 harf giriniz" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" value="<?= htmlspecialchars($_POST['C'] ?? '') ?>">
+<input type="text" name="C" id="C" placeholder="TR" 
+required maxlength="2" pattern="[A-Za-z]{2}" 
+title="Sadece 2 harf giriniz" style="text-transform: uppercase;" 
+oninput="this.value = this.value.toUpperCase()" 
+value="<?= htmlspecialchars($_POST['C'] ?? '') ?>">
+
 <label for="key_size">Anahtar Boyutu</label>
 <select name="key_size" id="key_size" required>
 <option value="2048" <?= (($_POST['key_size'] ?? '') === '2048') ? 'selected' : '' ?>>2048 bit</option>
 <option value="4096" <?= (($_POST['key_size'] ?? '') === '4096') ? 'selected' : '' ?>>4096 bit</option>
 </select>
+
 <label for="hash_alg">Hash Algoritması</label>
 <select name="hash_alg" id="hash_alg" required>
 <option value="sha1" <?= (($_POST['hash_alg'] ?? '') === 'sha1') ? 'selected' : '' ?>>SHA-1</option>
