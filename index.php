@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","GB","US","UM","UY","UZ","VU",
         "VE","VN","VG","VI","WF","EH","YE","ZM","ZW"
     ];
-    $validCommonname = [".com", ".net", ".org", ".edu", ".gov", ".tr", ".io", ".co", ".info", ".biz"];
+    $validCommonname = [".com", ".net", ".org", ".edu", ".gov", ".tr", ".io", ".co", ".info", ".biz", ".tel", ".de", ".xxx", ".eu", ".it", ".pro", ".ru", ".ac", ".ag", ".as", ".me", ".sg"];
 
     $errors = [];
     $required_fields = ['C', 'ST', 'L', 'O', 'OU', 'CN', 'key_size', 'hash_alg'];
@@ -65,12 +65,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ];
 
             $dn = [
-                "countryName" => $country,
-                "stateOrProvinceName" => $_POST["ST"],
-                "localityName" => $_POST["L"],
+                "commonName" => $_POST["CN"],                
                 "organizationName" => $_POST["O"],
                 "organizationalUnitName" => $_POST["OU"],
-                "commonName" => $_POST["CN"]
+                "stateOrProvinceName" => $_POST["ST"],
+                "localityName" => $_POST["L"],
+                "countryName" => $country
+                
             ];
 
             $privkey = openssl_pkey_new($config);
@@ -145,18 +146,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo "</head><body>";
         echo "<h2>Oluşturulan CSR ve Özel Anahtar</h2>";
         echo "<h3>Formda Girdiğiniz Bilgiler</h3>";
-        echo "<pre>";
-        echo "Ülke: " . htmlspecialchars($_POST['C']) . "\n";
-        echo "Şehir: " . htmlspecialchars($_POST['ST']) . "\n";
-        echo "İlçe: " . htmlspecialchars($_POST['L']) . "\n";
+        echo "<pre style='font-family:poppins;font-weight: bold;'>";
+        echo "Alan Adı (CN): " . htmlspecialchars($_POST['CN']) . "\n";                
         echo "Organizasyon: " . htmlspecialchars($_POST['O']) . "\n";
         echo "Organizasyon Birimi: " . htmlspecialchars($_POST['OU']) . "\n";
-        echo "Alan Adı (CN): " . htmlspecialchars($_POST['CN']) . "\n";
+        echo "Şehir: " . htmlspecialchars($_POST['ST']) . "\n";
+        echo "İlçe: " . htmlspecialchars($_POST['L']) . "\n";
+        echo "Ülke: " . htmlspecialchars($_POST['C']) . "\n";
         echo "Anahtar Boyutu: " . htmlspecialchars($_POST['key_size']) . " bit\n";
         echo "Hash Algoritması: " . strtoupper(htmlspecialchars($hash_alg)) . "\n";
         echo "</pre>";
-        echo "<h3>Özel Anahtar (Private Key) <span id='copyKeyBtn' class='copy-icon' title='Kopyala' onclick='copyKey()'>📄</span></h3><pre id='keyText'>" . htmlspecialchars($pkeyout) . "</pre>";
-        echo "<h3>CSR (Certificate Signing Request) <span id='copyCsrBtn' class='copy-icon' title='Kopyala' onclick='copyCSR()'>📄</span></h3><pre id='csrText'>" . htmlspecialchars($csrout) . "</pre>";
+        echo "<h3>Özel Anahtar (Private Key) <span id='copyKeyBtn' class='copy-icon' title='Kopyala' onclick='copyKey()' style='box-shadow: 0 2px 8px rgba(0,0,0,0.2);'>📄</span></h3><pre id='keyText'>" . htmlspecialchars($pkeyout) . "</pre>";
+        echo "<h3>CSR (Certificate Signing Request) <span id='copyCsrBtn' class='copy-icon' title='Kopyala' onclick='copyCSR()'style='box-shadow: 0 2px 8px rgba(0,0,0,0.2);'>📄</span></h3><pre id='csrText'>" . htmlspecialchars($csrout) . "</pre>";
         echo "<a href='" . htmlspecialchars($_SERVER['PHP_SELF']) . "' class='button'>Yeni CSR Talebi Oluştur</a>";
         echo "<script>
             function copyKey() {
@@ -238,7 +239,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         label {
             margin-top: 15px;
         }
-        input, select {
+        label:hover{
+            background-color: #f0f0f0;
+        }
+        input {
             padding: 8px;
             max font-size: 1rem;
             border: 1px solid #ccc;
@@ -264,15 +268,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             text-align: center;
             margin-bottom: 20px;
         }
-        select:hover {
-            background-color: #f0f0f0;
-        }
-        option {
-            border-radius: 5px;
-        }
-        option:hover {
-            background-color: #f0f0f0;
-        }
+        select {
+    appearance: none; /* Chrome, Edge */
+    -webkit-appearance: none; /* Safari */
+    -moz-appearance: none; /* Firefox */
+    background-color: white;
+    color: #333; /* Font rengin */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    font-family: poppins;
+    cursor: pointer;
+}
+
+select:hover,
+select:focus {
+    background-color: #f0f0f0; /* Üzerine gelince arka plan */
+    color: #333; /* Üzerine gelince font rengi */
+    outline: none;
+    border-color: #4CAF50; /* İsteğe bağlı hover kenar rengi */
+}
+
+option {
+    background-color: white; /* Dropdown arka plan */
+    color: #333; /* Dropdown yazı rengi */
+}
+
+option:hover {
+    background-color: #f0f0f0; /* Dropdown hover arka plan */
+    color: #333;
+}
+
         .error-message {
             background-color: #fdecea;
             border: 1px solid #f5c2c0;
@@ -301,19 +329,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     <?php endif; ?>
 
-    <label for="C">Ülke</label>
-    <input type="text" name="C" id="C" placeholder="TR" required maxlength="2"
-           pattern="[A-Za-z]{2}" title="Sadece 2 harf giriniz"
-           style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()"
-           value="<?= htmlspecialchars($_POST['C'] ?? '') ?>">
-
-    <label for="ST">Şehir</label>
-    <input type="text" name="ST" id="ST" placeholder="Ankara" required
-           value="<?= htmlspecialchars($_POST['ST'] ?? '') ?>">
-
-    <label for="L">İlçe</label>
-    <input type="text" name="L" id="L" placeholder="Çankaya" required
-           value="<?= htmlspecialchars($_POST['L'] ?? '') ?>">
+    <label for="CN">Alan Adı</label>
+    <input type="text" name="CN" id="CN" placeholder="ornek.com" required
+           value="<?= htmlspecialchars($_POST['CN'] ?? '') ?>">
 
     <label for="O">Organizasyon</label>
     <input type="text" name="O" id="O" placeholder="TÜBİTAK" required
@@ -323,9 +341,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="OU" id="OU" placeholder="Ar-Ge" required
            value="<?= htmlspecialchars($_POST['OU'] ?? '') ?>">
 
-    <label for="CN">Alan Adı</label>
-    <input type="text" name="CN" id="CN" placeholder="ornek.com" required
-           value="<?= htmlspecialchars($_POST['CN'] ?? '') ?>">
+    <label for="ST">Şehir</label>
+    <input type="text" name="ST" id="ST" placeholder="Ankara" required
+           value="<?= htmlspecialchars($_POST['ST'] ?? '') ?>">
+
+    <label for="L">İlçe</label>
+    <input type="text" name="L" id="L" placeholder="Çankaya" required
+           value="<?= htmlspecialchars($_POST['L'] ?? '') ?>">
+
+    <label for="C">Ülke</label>
+    <input type="text" name="C" id="C" placeholder="TR" required maxlength="2"
+           pattern="[A-Za-z]{2}" title="Sadece 2 harf giriniz"
+           style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()"
+           value="<?= htmlspecialchars($_POST['C'] ?? '') ?>">
 
     <label for="key_size">Anahtar Boyutu</label>
     <select name="key_size" id="key_size" required>
